@@ -17,7 +17,6 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
       <div className="container">
-
         <Link className="navbar-brand fw-bold" to="/">
           EMS
         </Link>
@@ -32,9 +31,7 @@ export default function Navbar() {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarContent">
-
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-
             <li className="nav-item">
               <Link className="nav-link" to="/">
                 Home
@@ -54,11 +51,9 @@ export default function Navbar() {
                 About
               </Link>
             </li>
-
           </ul>
 
           <div className="dropdown">
-
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJAVgEZdN3i24u5KqiegG9MCyzQPyAgKvmMw&s"
               alt="user"
@@ -70,7 +65,6 @@ export default function Navbar() {
             />
 
             <ul className="dropdown-menu dropdown-menu-end shadow">
-
               {user ? (
                 <>
                   <li>
@@ -97,10 +91,8 @@ export default function Navbar() {
                   </li>
                 </>
               )}
-
             </ul>
           </div>
-
         </div>
       </div>
     </nav>

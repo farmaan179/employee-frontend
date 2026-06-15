@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 import App from "./App.jsx";
-import MyContext from "../context/MyContext.jsx";
+import MyContext from "./context/MyContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -13,5 +13,5 @@ createRoot(document.getElementById("root")).render(
         <App />
       </MyContext>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );
