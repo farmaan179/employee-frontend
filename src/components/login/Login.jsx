@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import { loginUser } from "../services/authService";
+import { myContext } from "../../context/MyContext";
 import "./login.css";
 
 function Login() {
@@ -11,10 +12,16 @@ function Login() {
   });
 
   const [message, setMessage] = useState("");
+
   const navigate = useNavigate();
 
+  const { loginUser: contextLoginUser } = useContext(myContext);
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -30,34 +37,36 @@ function Login() {
 
       console.log("LOGIN RESPONSE:", res.data);
 
-      // ❌ OLD DATA CLEAR (IMPORTANT FIX)
-      localStorage.clear();
-
-      // ❌ TOKEN CHECK
       if (!res.data.token) {
         setMessage("❌ Token not received from server");
         return;
       }
 
-      // ✅ SAVE NEW DATA
+      // Clear old data
+      localStorage.clear();
+
+      // Save token
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("isLogin", "true");
 
-      // ✅ IF USER COMES FROM BACKEND
+      // Save user and update context
       if (res.data.user) {
         localStorage.setItem(
           "user",
           JSON.stringify(res.data.user)
         );
+
+        contextLoginUser(
+          res.data.user,
+          res.data.token
+        );
       }
 
       setMessage("✅ Login Successful");
 
-      // ✅ refresh UI properly
       setTimeout(() => {
         navigate("/");
-        window.location.reload(); // important fix for stale data
-      }, 800);
+      }, 1000);
 
     } catch (err) {
       console.log("LOGIN ERROR:", err);
@@ -79,7 +88,9 @@ function Login() {
           <p>Login to your EMS account</p>
 
           {message && (
-            <div className="alert">{message}</div>
+            <div className="alert">
+              {message}
+            </div>
           )}
 
           <form onSubmit={handleSubmit}>
@@ -99,12 +110,16 @@ function Login() {
               onChange={handleChange}
             />
 
-            <button type="submit">Login</button>
+            <button type="submit">
+              Login
+            </button>
           </form>
 
           <p className="bottom-text">
             Don't have account?{" "}
-            <Link to="/register">Register</Link>
+            <Link to="/register">
+              Register
+            </Link>
           </p>
         </div>
       </div>
