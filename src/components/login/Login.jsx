@@ -1,8 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import { loginUser } from "../services/authService";
-import { myContext } from "../../context/MyContext";
 import "./login.css";
 
 function Login() {
@@ -12,71 +11,55 @@ function Login() {
   });
 
   const [message, setMessage] = useState("");
-
   const navigate = useNavigate();
 
-  const { loginUser: contextLoginUser } = useContext(myContext);
-
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  if (!form.email || !form.password) {
+    setMessage("❌ All fields are required");
+    return;
+  }
 
-    if (!form.email || !form.password) {
-      setMessage("❌ All fields are required");
+  try {
+    const res = await loginUser(form);
+
+    console.log("RES =", res);
+    console.log("DATA =", res.data);
+    console.log("TOKEN =", res.data.token);
+
+    if (!res.data.token) {
+      setMessage("❌ Token not received from server");
       return;
     }
 
-    try {
-      const res = await loginUser(form);
+    localStorage.setItem("token", res.data.token);
 
-      console.log("LOGIN RESPONSE:", res.data);
+    console.log(
+      "AFTER SAVE =",
+      localStorage.getItem("token")
+    );
 
-      if (!res.data.token) {
-        setMessage("❌ Token not received from server");
-        return;
-      }
+    localStorage.setItem("isLogin", "true");
 
-      // Clear old data
-      localStorage.clear();
+    setMessage("✅ Login Successful");
 
-      // Save token
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("isLogin", "true");
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
 
-      // Save user and update context
-      if (res.data.user) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify(res.data.user)
-        );
+  } catch (err) {
+    console.log("LOGIN ERROR =", err);
 
-        contextLoginUser(
-          res.data.user,
-          res.data.token
-        );
-      }
-
-      setMessage("✅ Login Successful");
-
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-
-    } catch (err) {
-      console.log("LOGIN ERROR:", err);
-
-      setMessage(
-        err.response?.data?.message ||
-        "Invalid credentials"
-      );
-    }
-  };
+    setMessage(
+      err.response?.data?.message ||
+      "Invalid credentials"
+    );
+  }
+};
 
   return (
     <>
@@ -87,11 +70,7 @@ function Login() {
           <h2>Welcome Back 👋</h2>
           <p>Login to your EMS account</p>
 
-          {message && (
-            <div className="alert">
-              {message}
-            </div>
-          )}
+          {message && <div className="alert">{message}</div>}
 
           <form onSubmit={handleSubmit}>
             <input
@@ -110,16 +89,11 @@ function Login() {
               onChange={handleChange}
             />
 
-            <button type="submit">
-              Login
-            </button>
+            <button type="submit">Login</button>
           </form>
 
           <p className="bottom-text">
-            Don't have account?{" "}
-            <Link to="/register">
-              Register
-            </Link>
+            Don't have account? <Link to="/register">Register</Link>
           </p>
         </div>
       </div>
