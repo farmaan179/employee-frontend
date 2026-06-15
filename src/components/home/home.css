@@ -1,0 +1,62 @@
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #dbeafe, #f0f9ff);
+  display: flex;
+  flex-direction: column;
+}
+
+/* MAIN CONTENT SPACING (navbar + footer safe) */
+.main-content {
+  flex: 1;
+  padding-top: 100px;
+  padding-bottom: 90px;
+}
+
+/* HEADER DESIGN */
+.home-header {
+  margin-bottom: 20px;
+}
+
+.home-header h2 {
+  color: #0f172a;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.home-header p {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+/* EMPLOYEE CARD */
+.home-card {
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 10px;
+  transition: all 0.3s ease;
+
+  /* soft shadow */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .home-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .home-header p {
+    font-size: 0.9rem;
+  }
+
+  .main-content {
+    padding-top: 85px;
+    padding-bottom: 60px;
+  }
+}

@@ -1,0 +1,150 @@
+/* ===== Navbar Base ===== */
+
+body {
+  padding-top: 75px;
+  background: #f8fafc;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+
+  background: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+/* Brand */
+.navbar-brand {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff !important;
+  letter-spacing: 0.5px;
+}
+
+/* Links */
+.nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  margin: 0 10px;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+/* hover underline effect */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: #38bdf8;
+  transition: 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #38bdf8 !important;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* active link */
+.nav-link.active {
+  color: #38bdf8 !important;
+}
+
+/* user image */
+.user-img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid #38bdf8;
+  transition: 0.3s ease;
+}
+
+.user-img:hover {
+  transform: scale(1.1);
+}
+
+/* dropdown */
+.dropdown-menu {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  transition: 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background: #e2e8f0;
+}
+
+/* toggler */
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+/* dropdown animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Mobile ===== */
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background: rgba(15, 23, 42, 0.98);
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 10px;
+  }
+
+  .nav-link {
+    padding: 10px 0;
+  }
+
+  .dropdown {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  body {
+    padding-top: 70px;
+  }
+
+  .navbar-brand {
+    font-size: 1.3rem;
+  }
+
+  .user-img {
+    width: 40px;
+    height: 40px;
+  }
+}
