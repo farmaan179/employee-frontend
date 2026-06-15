@@ -16,50 +16,58 @@ function Login() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  if (!form.email || !form.password) {
-    setMessage("❌ All fields are required");
-    return;
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const res = await loginUser(form);
-
-    console.log("RES =", res);
-    console.log("DATA =", res.data);
-    console.log("TOKEN =", res.data.token);
-
-    if (!res.data.token) {
-      setMessage("❌ Token not received from server");
+    if (!form.email || !form.password) {
+      setMessage("❌ All fields are required");
       return;
     }
 
-    localStorage.setItem("token", res.data.token);
+    try {
+      const res = await loginUser(form);
 
-    console.log(
-      "AFTER SAVE =",
-      localStorage.getItem("token")
-    );
+      console.log("LOGIN RESPONSE:", res.data);
 
-    localStorage.setItem("isLogin", "true");
+      // ❌ OLD DATA CLEAR (IMPORTANT FIX)
+      localStorage.clear();
 
-    setMessage("✅ Login Successful");
+      // ❌ TOKEN CHECK
+      if (!res.data.token) {
+        setMessage("❌ Token not received from server");
+        return;
+      }
 
-    setTimeout(() => {
-      navigate("/");
-    }, 1000);
+      // ✅ SAVE NEW DATA
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("isLogin", "true");
 
-  } catch (err) {
-    console.log("LOGIN ERROR =", err);
+      // ✅ IF USER COMES FROM BACKEND
+      if (res.data.user) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify(res.data.user)
+        );
+      }
 
-    setMessage(
-      err.response?.data?.message ||
-      "Invalid credentials"
-    );
-  }
-};
+      setMessage("✅ Login Successful");
+
+      // ✅ refresh UI properly
+      setTimeout(() => {
+        navigate("/");
+        window.location.reload(); // important fix for stale data
+      }, 800);
+
+    } catch (err) {
+      console.log("LOGIN ERROR:", err);
+
+      setMessage(
+        err.response?.data?.message ||
+        "Invalid credentials"
+      );
+    }
+  };
 
   return (
     <>
@@ -70,7 +78,9 @@ const handleSubmit = async (e) => {
           <h2>Welcome Back 👋</h2>
           <p>Login to your EMS account</p>
 
-          {message && <div className="alert">{message}</div>}
+          {message && (
+            <div className="alert">{message}</div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <input
@@ -93,7 +103,8 @@ const handleSubmit = async (e) => {
           </form>
 
           <p className="bottom-text">
-            Don't have account? <Link to="/register">Register</Link>
+            Don't have account?{" "}
+            <Link to="/register">Register</Link>
           </p>
         </div>
       </div>

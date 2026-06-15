@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { myContext } from "../../context/MyContext";
 import "./navbar.css";
 
 export default function Navbar() {
   const navigate = useNavigate();
 
-  const isLogin = localStorage.getItem("isLogin");
+  const { user, logoutUser } = useContext(myContext);
 
   const handleLogout = () => {
-    localStorage.removeItem("isLogin");
-    localStorage.removeItem("user"); // optional cleanup
-
+    logoutUser(); // context + localStorage clear
     alert("User logged out successfully");
     navigate("/login");
   };
@@ -19,12 +18,10 @@ export default function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
       <div className="container">
 
-        {/* Logo */}
         <Link className="navbar-brand fw-bold" to="/">
           EMS
         </Link>
 
-        {/* Mobile toggle */}
         <button
           className="navbar-toggler"
           type="button"
@@ -34,10 +31,8 @@ export default function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Menu */}
         <div className="collapse navbar-collapse" id="navbarContent">
 
-          {/* LEFT LINKS */}
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
             <li className="nav-item">
@@ -46,7 +41,7 @@ export default function Navbar() {
               </Link>
             </li>
 
-            {isLogin && (
+            {user && (
               <li className="nav-item">
                 <Link className="nav-link" to="/addEmp">
                   Add Employee
@@ -62,7 +57,6 @@ export default function Navbar() {
 
           </ul>
 
-          {/* RIGHT USER MENU */}
           <div className="dropdown">
 
             <img
@@ -77,7 +71,7 @@ export default function Navbar() {
 
             <ul className="dropdown-menu dropdown-menu-end shadow">
 
-              {isLogin ? (
+              {user ? (
                 <>
                   <li>
                     <button
@@ -86,12 +80,6 @@ export default function Navbar() {
                     >
                       Logout
                     </button>
-                  </li>
-
-                  <li>
-                    <Link className="dropdown-item" to="/help">
-                      Help
-                    </Link>
                   </li>
                 </>
               ) : (
